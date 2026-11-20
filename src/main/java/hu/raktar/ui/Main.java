@@ -1,5 +1,6 @@
 package hu.raktar.ui;
 
+import hu.raktar.domain.DigitalProduct;
 import hu.raktar.domain.PhysicalProduct;
 import hu.raktar.exception.OutOfStockException;
 import hu.raktar.persistence.FileHandler;
@@ -20,9 +21,10 @@ public class Main {
             System.out.println("\n--- OKOS RAKTÁRKEZELŐ ---");
             System.out.println("1. Termékek listázása");
             System.out.println("2. Új fizikai termék hozzáadása");
-            System.out.println("3. Termékek rendezése ár szerint");
-            System.out.println("4. Termék eladása (készlet csökkentés)");
-            System.out.println("5. Mentés fájlba és kilépés");
+            System.out.println("3. Új digitális termék hozzáadása");
+            System.out.println("4. Termékek rendezése ár szerint");
+            System.out.println("5. Termék eladása (készlet csökkentés)");
+            System.out.println("6. Mentés fájlba és kilépés");
             System.out.print("Válassz egy opciót: ");
 
             try {
@@ -53,13 +55,32 @@ public class Main {
                         scanner.nextLine(); // enter lenyelése
 
                         service.addProduct(new PhysicalProduct(id, name, price, qty, weight));
-                        System.out.println("Termék sikeresen hozzáadva!");
+                        System.out.println("Fizikai termék sikeresen hozzáadva!");
                         break;
                     case 3:
+                        System.out.print("ID: ");
+                        String dId = scanner.nextLine();
+                        System.out.print("Név: ");
+                        String dName = scanner.nextLine();
+                        System.out.print("Ár (Ft): ");
+                        double dPrice = scanner.nextDouble();
+                        System.out.print("Mennyiség (db): ");
+                        int dQty = scanner.nextInt();
+                        scanner.nextLine(); // enter lenyelése
+                        System.out.print("Licenckulcs: ");
+                        String licenseKey = scanner.nextLine();
+                        System.out.print("Fájlméret (MB): ");
+                        double fileSizeMb = scanner.nextDouble();
+                        scanner.nextLine(); // enter lenyelése
+
+                        service.addProduct(new DigitalProduct(dId, dName, dPrice, dQty, licenseKey, fileSizeMb));
+                        System.out.println("Digitális termék sikeresen hozzáadva!");
+                        break;
+                    case 4:
                         service.sortProductsByPrice();
                         System.out.println("Termékek rendezve ár szerint!");
                         break;
-                    case 4:
+                    case 5:
                         System.out.print("Add meg a termék ID-ját: ");
                         String sellId = scanner.nextLine();
                         System.out.print("Eladandó mennyiség: ");
@@ -69,7 +90,7 @@ public class Main {
                         service.sellProduct(sellId, sellQty);
                         System.out.println("Sikeres eladás!");
                         break;
-                    case 5:
+                    case 6:
                         fileHandler.saveInventory(service);
                         running = false;
                         System.out.println("Kilépés...");
