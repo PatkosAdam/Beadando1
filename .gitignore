@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+# IntelliJ IDEA teljes mappa
+.idea/
+
+# Helyi futásidejű adatfájlok
+inventory.txt
