@@ -1,0 +1,81 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package "hu.raktar.domain" {
+  interface Sellable {
+    + sell(quantity: int) : void
+    + getPrice() : double
+  }
+
+  abstract class Product {
+    - id : String
+    - name : String
+    - price : double
+    - quantity : int
+    + getId() : String
+    + getName() : String
+    + getPrice() : double
+    + getQuantity() : int
+    + setQuantity(quantity: int) : void
+    + {abstract} getProductDetails() : String
+  }
+
+  class PhysicalProduct extends Product implements Sellable {
+    - weightKg : double
+    + getWeightKg() : double
+    + sell(quantity: int) : void
+    + getProductDetails() : String
+  }
+
+  class DigitalProduct extends Product implements Sellable {
+    - licenseKey : String
+    - fileSizeMb : double
+    + getLicenseKey() : String
+    + getFileSizeMb() : double
+    + sell(quantity: int) : void
+    + getProductDetails() : String
+  }
+}
+
+package "hu.raktar.exception" {
+  class OutOfStockException extends Exception {
+    + OutOfStockException(message: String)
+  }
+}
+
+package "hu.raktar.service" {
+  class ProductFactory {
+    + createPhysicalProduct(...) : Product
+    + createDigitalProduct(...) : Product
+  }
+
+  class InventoryService {
+    - products : List<Product>
+    + addProduct(product: Product) : void
+    + getProducts() : List<Product>
+    + sortProductsByPrice() : void
+    + sellProduct(id: String, quantity: int) : void
+  }
+}
+
+package "hu.raktar.persistence" {
+  class FileHandler {
+    + loadInventory(service: InventoryService) : void
+    + saveInventory(service: InventoryService) : void
+  }
+}
+
+package "hu.raktar.ui" {
+  class Main {
+    + {static} main(args: String[]) : void
+  }
+}
+
+Main --> InventoryService : uses
+Main --> ProductFactory : uses
+Main --> FileHandler : uses
+InventoryService "1" o-- "*" Product : manages
+ProductFactory ..> PhysicalProduct : creates
+ProductFactory ..> DigitalProduct : creates
+Sellable ..> OutOfStockException : throws
+@enduml
