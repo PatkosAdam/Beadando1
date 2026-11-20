@@ -83,12 +83,43 @@ public class Main {
                     case 5:
                         System.out.print("Add meg a termék ID-ját: ");
                         String sellId = scanner.nextLine();
-                        System.out.print("Eladandó mennyiség: ");
-                        int sellQty = scanner.nextInt();
-                        scanner.nextLine(); // enter lenyelése
 
-                        service.sellProduct(sellId, sellQty);
-                        System.out.println("Sikeres eladás!");
+                        hu.raktar.domain.Product targetProduct = null;
+                        for (var p : service.getProducts()) {
+                            if (p.getId().equals(sellId)) {
+                                targetProduct = p;
+                                break;
+                            }
+                        }
+
+                        if (targetProduct == null) {
+                            System.out.println("HIBA: Nem található termék ezzel az ID-val: " + sellId);
+                            break;
+                        }
+
+                        while (true) {
+                            System.out.print("Eladandó mennyiség (0 = mégse): ");
+                            int sellQty = scanner.nextInt();
+                            scanner.nextLine(); // enter lenyelése
+
+                            if (sellQty == 0) {
+                                System.out.println("Eladás megszakítva.");
+                                break;
+                            }
+                            if (sellQty < 0) {
+                                System.out.println("HIBA: A mennyiség nem lehet negatív! Próbáld újra.");
+                                continue;
+                            }
+                            if (sellQty > targetProduct.getQuantity()) {
+                                System.out.println("Nincs ennyi készleten! Jelenleg elérhető mennyiség: "
+                                        + targetProduct.getQuantity() + " db. Adj meg kisebb mennyiséget, vagy 0-t a kilépéshez.");
+                                continue;
+                            }
+
+                            service.sellProduct(sellId, sellQty);
+                            System.out.println("Sikeres eladás!");
+                            break;
+                        }
                         break;
                     case 6:
                         fileHandler.saveInventory(service);
