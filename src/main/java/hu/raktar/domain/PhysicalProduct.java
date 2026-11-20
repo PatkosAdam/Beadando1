@@ -23,6 +23,6 @@ public class PhysicalProduct extends Product {
     // Polimorfizmus: felülírjuk az absztrakt metódust
     @Override
     public String getProductDetails() {
-        return "Fizikai termék: " + getName() + " | Ár: " + getPrice() + " Ft | Készlet: " + getQuantity() + " db | Súly: " + weightInKg + " kg";
+        return "Fizikai termék (ID: " + getId() + "): " + getName() + " | Ár: " + getPrice() + " Ft | Készlet: " + getQuantity() + " db | Súly: " + weightInKg + " kg";
     }
 }
