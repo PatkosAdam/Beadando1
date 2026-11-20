@@ -12,6 +12,14 @@ public class InventoryService {
     private List<Product> products = new ArrayList<>();
 
     public void addProduct(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("A termék nem lehet null!");
+        }
+        for (Product existing : products) {
+            if (existing.getId().equals(product.getId())) {
+                throw new IllegalArgumentException("Már létezik termék ezzel az ID-val: " + product.getId());
+            }
+        }
         products.add(product);
     }
 
@@ -24,6 +32,9 @@ public class InventoryService {
     }
 
     public void sellProduct(String productId, int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Az eladott mennyiségnek pozitívnak kell lennie!");
+        }
         for (Product p : products) {
             if (p.getId().equals(productId)) {
                 if (p.getQuantity() < amount) {
