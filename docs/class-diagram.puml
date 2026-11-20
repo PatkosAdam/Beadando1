@@ -20,25 +20,24 @@ package "hu.raktar.domain" {
     + {abstract} getProductDetails() : String
   }
 
-  class PhysicalProduct extends Product implements Sellable {
-    - weightKg : double
-    + getWeightKg() : double
-    + sell(quantity: int) : void
+  class PhysicalProduct extends Product {
+    - weightInKg : double
+    + getWeightInKg() : double
+    + setWeightInKg(weightInKg: double) : void
     + getProductDetails() : String
   }
 
-  class DigitalProduct extends Product implements Sellable {
+  class DigitalProduct extends Product {
     - licenseKey : String
     - fileSizeMb : double
     + getLicenseKey() : String
     + getFileSizeMb() : double
-    + sell(quantity: int) : void
     + getProductDetails() : String
   }
 }
 
 package "hu.raktar.exception" {
-  class OutOfStockException extends Exception {
+  class OutOfStockException {
     + OutOfStockException(message: String)
   }
 }
@@ -54,7 +53,7 @@ package "hu.raktar.service" {
     + addProduct(product: Product) : void
     + getProducts() : List<Product>
     + sortProductsByPrice() : void
-    + sellProduct(id: String, quantity: int) : void
+    + sellProduct(productId: String, amount: int) : void
   }
 }
 
@@ -75,7 +74,7 @@ Main --> InventoryService : uses
 Main --> ProductFactory : uses
 Main --> FileHandler : uses
 InventoryService "1" o-- "*" Product : manages
+InventoryService ..> OutOfStockException : throws
 ProductFactory ..> PhysicalProduct : creates
 ProductFactory ..> DigitalProduct : creates
-Sellable ..> OutOfStockException : throws
 @enduml
