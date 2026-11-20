@@ -1,16 +1,16 @@
 package hu.raktar.ui;
 
-import hu.raktar.domain.DigitalProduct;
-import hu.raktar.domain.PhysicalProduct;
 import hu.raktar.exception.OutOfStockException;
 import hu.raktar.persistence.FileHandler;
 import hu.raktar.service.InventoryService;
+import hu.raktar.service.ProductFactory;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         InventoryService service = new InventoryService();
+        ProductFactory factory = new ProductFactory();
         FileHandler fileHandler = new FileHandler();
         Scanner scanner = new Scanner(System.in);
 
@@ -54,7 +54,7 @@ public class Main {
                         double weight = scanner.nextDouble();
                         scanner.nextLine(); // enter lenyelése
 
-                        service.addProduct(new PhysicalProduct(id, name, price, qty, weight));
+                        service.addProduct(factory.createPhysicalProduct(id, name, price, qty, weight));
                         System.out.println("Fizikai termék sikeresen hozzáadva!");
                         break;
                     case 3:
@@ -73,7 +73,7 @@ public class Main {
                         double fileSizeMb = scanner.nextDouble();
                         scanner.nextLine(); // enter lenyelése
 
-                        service.addProduct(new DigitalProduct(dId, dName, dPrice, dQty, licenseKey, fileSizeMb));
+                        service.addProduct(factory.createDigitalProduct(dId, dName, dPrice, dQty, licenseKey, fileSizeMb));
                         System.out.println("Digitális termék sikeresen hozzáadva!");
                         break;
                     case 4:
